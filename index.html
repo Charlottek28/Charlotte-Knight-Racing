@@ -24,7 +24,7 @@
     --maxw: 1180px;
   }
 
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html{scroll-behavior:smooth;}
   body{
     margin:0;
@@ -34,6 +34,7 @@
     font-size:16px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
   }
 
   h1,h2,h3,h4{
@@ -90,14 +91,39 @@
     z-index:50;
     background:rgba(21,21,26,0.92);
     backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
     border-bottom:1px solid var(--line);
+    padding-top:env(safe-area-inset-top);
   }
   .nav-inner{
     display:flex;
     align-items:center;
     justify-content:space-between;
     height:64px;
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
   }
+
+  /* ---------- mobile nav drawer ---------- */
+  .mobile-nav{
+    display:none;
+    flex-direction:column;
+    background:rgba(21,21,26,0.98);
+    border-top:1px solid var(--line);
+    padding:16px 28px 24px;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{
+    padding:14px 0;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--bone-dim);
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-nav a:last-child{border-bottom:none;}
+  .mobile-nav a:active{color:var(--lime);}
   .brand{
     display:flex;
     align-items:baseline;
@@ -131,11 +157,12 @@
     background:none;
     border:1px solid var(--line-strong);
     color:var(--bone);
-    width:38px;
-    height:38px;
+    width:44px;
+    height:44px;
     border-radius:3px;
     font-size:18px;
     cursor:pointer;
+    touch-action:manipulation;
   }
 
   /* ---------- hero ---------- */
@@ -227,6 +254,11 @@
     gap:18px;
     padding:22px 28px;
     flex-wrap:wrap;
+    row-gap:10px;
+  }
+  @media (max-width: 480px){
+    .sponsor-strip .wrap{flex-direction:column; align-items:flex-start; gap:10px; padding:16px 16px;}
+    .sponsor-pills{justify-content:flex-start; width:100%;}
   }
   .sponsor-strip .label{
     font-size:11px;
@@ -650,6 +682,7 @@
   footer{
     border-top:1px solid var(--line);
     padding:32px 0 40px;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom));
   }
   footer .wrap{
     display:flex;
@@ -672,7 +705,9 @@
     align-items:flex-start;
     justify-content:center;
     overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
     padding:48px 20px;
+    padding-bottom:calc(48px + env(safe-area-inset-bottom));
   }
   .modal-overlay.open{display:flex;}
   .modal{
@@ -780,6 +815,26 @@
     .contact-card{padding:32px 22px;}
     .event-row{grid-template-columns:70px 1fr; row-gap:10px;}
     .event-flag{grid-column:1/-1; justify-self:start;}
+    section{padding:48px 0;}
+    .btn{min-height:44px; touch-action:manipulation;}
+  }
+
+  /* ---------- small phones (iPhone SE, 390px iPhones) ---------- */
+  @media (max-width: 480px){
+    .wrap{padding:0 16px;}
+    .modal{padding:24px 18px;}
+    .modal-overlay{padding:16px 12px; padding-bottom:calc(16px + env(safe-area-inset-bottom)); align-items:flex-end;}
+    .modal{border-radius:12px 12px 0 0; max-height:92dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+    .section-tail{display:none;}
+    .hero-content{padding:72px 0 36px; min-height:360px;}
+    .hero-stats{gap:22px; margin-top:28px;}
+    .stat .num{font-size:28px;}
+    .contact-card{padding:28px 16px;}
+    .contact-actions{flex-direction:column; align-items:stretch;}
+    .contact-actions .btn{justify-content:center;}
+    .sponsor-logo-grid{grid-template-columns:1fr 1fr;}
+    section{padding:40px 0;}
+    .detail-modal .meta-row{gap:10px;}
   }
 </style>
 </head>
@@ -801,6 +856,13 @@
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
   </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#upcoming" class="mobile-nav-link">Upcoming</a>
+    <a href="#races" class="mobile-nav-link">Race reports</a>
+    <a href="#sponsors" class="mobile-nav-link">Sponsors</a>
+    <a href="#about" class="mobile-nav-link">About</a>
+    <a href="#contact" class="mobile-nav-link">Contact</a>
+  </nav>
 </header>
 
 <!-- ============ HERO ============ -->
@@ -1510,6 +1572,22 @@ document.getElementById("sponsorForm").addEventListener("submit", (e) => {
   sponsorPackOverlay.classList.remove("open");
   e.target.reset();
   alert(`Thanks${name ? ", " + name : ""} — your sponsor pack request has been noted.`);
+});
+
+// ===================== MOBILE NAV =====================
+const navToggle = document.getElementById("navToggle");
+const mobileNav = document.getElementById("mobileNav");
+navToggle.addEventListener("click", () => {
+  const open = mobileNav.classList.toggle("open");
+  navToggle.setAttribute("aria-expanded", open);
+  navToggle.textContent = open ? "✕" : "☰";
+});
+mobileNav.querySelectorAll("a").forEach(a => {
+  a.addEventListener("click", () => {
+    mobileNav.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", false);
+    navToggle.textContent = "☰";
+  });
 });
 
 // ===================== INIT =====================
