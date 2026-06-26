@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Charlotte Knight #45</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15151a;
+    --ink-2:#1d1d24;
+    --bone:#f4f1e9;
+    --bone-dim:#cfcabd;
+    --purple:#7b3fe4;
+    --lime:#c8f23d;
+    --line: rgba(244,241,233,0.14);
+    --line-strong: rgba(244,241,233,0.28);
+    --radius: 4px;
+    --maxw: 1180px;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--bone);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2,h3{
+    font-family:'Anton','Inter',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+    margin:0;
+    font-weight:400;
+  }
+  .mono{font-family:'JetBrains Mono','SF Mono',Consolas,monospace; letter-spacing:0.02em;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(21,21,26,0.92);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+    padding-top:env(safe-area-inset-top);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:64px;
+    padding-left:max(20px, env(safe-area-inset-left));
+    padding-right:max(20px, env(safe-area-inset-right));
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .plate{
+    background:var(--purple);
+    color:var(--bone);
+    font-family:'Anton',sans-serif;
+    font-size:15px;
+    padding:3px 9px 2px;
+    border-radius:3px;
+  }
+  .brand .name{font-family:'Anton',sans-serif; font-size:17px; letter-spacing:0.02em;}
+  nav.links{
+    display:flex;
+    gap:28px;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--bone-dim);
+  }
+  nav.links a:hover{color:var(--lime);}
+  nav.links a.active{color:var(--lime);}
+  .nav-toggle{
+    display:none;
+    background:none;
+    border:1px solid var(--line-strong);
+    color:var(--bone);
+    width:44px; height:44px;
+    border-radius:3px;
+    font-size:18px;
+    cursor:pointer;
+    touch-action:manipulation;
+  }
+  .mobile-nav{
+    display:none;
+    flex-direction:column;
+    background:rgba(21,21,26,0.98);
+    border-top:1px solid var(--line);
+    padding:16px 24px 24px;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom));
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{
+    padding:14px 0;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--bone-dim);
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-nav a:last-child{border-bottom:none;}
+  .mobile-nav a.active{color:var(--lime);}
+
+  /* ---------- page header ---------- */
+  .page-hero{
+    padding:56px 0 48px;
+    border-bottom:1px solid var(--line);
+  }
+  .page-hero .eyebrow{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    color:var(--lime);
+    display:block;
+    margin-bottom:10px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .page-hero h1{font-size:clamp(36px,6vw,72px); line-height:0.95;}
+  .page-hero p{color:var(--bone-dim); margin:16px 0 0; max-width:480px; font-size:16px;}
+
+  /* ---------- filter bar ---------- */
+  .filter-bar{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:28px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .filter-btn{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    padding:8px 16px;
+    border-radius:3px;
+    border:1px solid var(--line-strong);
+    background:transparent;
+    color:var(--bone-dim);
+    cursor:pointer;
+    font-family:inherit;
+    touch-action:manipulation;
+  }
+  .filter-btn:hover{border-color:var(--lime); color:var(--lime);}
+  .filter-btn.active{background:var(--lime); border-color:var(--lime); color:var(--ink); font-weight:600;}
+
+  /* ---------- gallery grid ---------- */
+  .gallery-section{padding:40px 0 72px;}
+  .gallery-grid{
+    columns:3;
+    column-gap:12px;
+  }
+  .gallery-item{
+    break-inside:avoid;
+    margin-bottom:12px;
+    position:relative;
+    cursor:pointer;
+    overflow:hidden;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+  }
+  .gallery-item img{
+    width:100%;
+    display:block;
+    transition:transform 0.3s ease;
+  }
+  .gallery-item:hover img{transform:scale(1.03);}
+  .gallery-item .overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(21,21,26,0.85) 0%, transparent 50%);
+    opacity:0;
+    transition:opacity 0.2s ease;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:16px;
+  }
+  .gallery-item:hover .overlay{opacity:1;}
+  .gallery-item .overlay .caption{
+    font-size:13px;
+    color:var(--bone);
+    line-height:1.3;
+  }
+  .gallery-item .overlay .event-tag{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--lime);
+    margin-bottom:4px;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  /* ---------- empty state ---------- */
+  .gallery-empty{
+    text-align:center;
+    padding:80px 32px;
+    color:var(--bone-dim);
+    border:1px dashed var(--line-strong);
+    border-radius:var(--radius);
+    margin-top:40px;
+  }
+  .gallery-empty h3{color:var(--bone); font-size:22px; margin-bottom:12px;}
+  .gallery-empty p{max-width:440px; margin:0 auto; font-size:15px;}
+  .gallery-empty code{
+    background:var(--ink-2);
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    padding:2px 7px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--lime);
+  }
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    background:rgba(10,10,12,0.95);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    padding-bottom:calc(20px + env(safe-area-inset-bottom));
+  }
+  .lightbox.open{display:flex;}
+  .lightbox-inner{
+    position:relative;
+    max-width:900px;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .lightbox img{
+    max-height:80dvh;
+    max-width:100%;
+    object-fit:contain;
+    border-radius:4px;
+    border:1px solid var(--line-strong);
+  }
+  .lightbox-caption{
+    margin-top:14px;
+    text-align:center;
+  }
+  .lightbox-caption .event{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--lime);
+    font-family:'JetBrains Mono',monospace;
+    margin-bottom:4px;
+  }
+  .lightbox-caption .text{color:var(--bone-dim); font-size:14px;}
+  .lightbox-close{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:none;
+    border:1px solid var(--line-strong);
+    color:var(--bone);
+    width:44px; height:44px;
+    border-radius:3px;
+    font-size:22px;
+    cursor:pointer;
+    line-height:1;
+    touch-action:manipulation;
+  }
+  .lightbox-prev, .lightbox-next{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(21,21,26,0.7);
+    border:1px solid var(--line-strong);
+    color:var(--bone);
+    width:44px; height:64px;
+    font-size:22px;
+    cursor:pointer;
+    border-radius:3px;
+    touch-action:manipulation;
+  }
+  .lightbox-prev{left:12px;}
+  .lightbox-next{right:12px;}
+  .lightbox-prev:hover, .lightbox-next:hover{border-color:var(--lime); color:var(--lime);}
+  .lightbox-counter{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:12px;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--bone-dim);
+    letter-spacing:0.08em;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:32px 0 40px;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom));
+  }
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+  footer .foot-name{font-size:13px; color:var(--bone-dim);}
+  footer .foot-links{display:flex; gap:18px; font-size:13px; color:var(--bone-dim);}
+  footer .foot-links a:hover{color:var(--lime);}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 860px){
+    nav.links{display:none;}
+    .nav-toggle{display:block;}
+    .gallery-grid{columns:2;}
+  }
+  @media (max-width: 480px){
+    .wrap{padding:0 24px;}
+    .gallery-grid{columns:2; column-gap:8px;}
+    .gallery-item{margin-bottom:8px;}
+    .lightbox-prev{left:4px;}
+    .lightbox-next{right:4px;}
+    .page-hero{padding:36px 0 32px;}
+    footer{padding:24px 0 32px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="plate mono">45</span>
+      <span class="name">CHARLOTTE KNIGHT</span>
+    </a>
+    <nav class="links">
+      <a href="index.html#upcoming">Upcoming</a>
+      <a href="index.html#races">Race reports</a>
+      <a href="index.html#sponsors">Sponsors</a>
+      <a href="index.html#about">About</a>
+      <a href="gallery.html" class="active">Gallery</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html#upcoming">Upcoming</a>
+    <a href="index.html#races">Race reports</a>
+    <a href="index.html#sponsors">Sponsors</a>
+    <a href="index.html#about">About</a>
+    <a href="gallery.html" class="active">Gallery</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Season 2026</span>
+    <h1>Gallery</h1>
+    <p>Race days, practice sessions, and everything in between.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all">All</button>
+  </div>
+</div>
+
+<div class="gallery-section">
+  <div class="wrap">
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="foot-name">© 2026 Charlotte Knight · #45</span>
+    <div class="foot-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lbClose" aria-label="Close">×</button>
+  <button class="lightbox-prev" id="lbPrev" aria-label="Previous">‹</button>
+  <button class="lightbox-next" id="lbNext" aria-label="Next">›</button>
+  <div class="lightbox-inner">
+    <img id="lbImg" src="" alt="">
+    <div class="lightbox-caption">
+      <div class="event" id="lbEvent"></div>
+      <div class="text" id="lbCaption"></div>
+    </div>
+  </div>
+  <div class="lightbox-counter" id="lbCounter"></div>
+</div>
+
+<script>
+// ===================== GALLERY DATA =====================
+// Add new photos here. Each entry needs:
+//   src      — relative path, e.g. "images/2026-07-isle-of-man/photo1.jpg"
+//   event    — shown as a label above the caption (matches your event slugs)
+//   caption  — optional short description
+//
+// Photos are grouped by event in the filter bar automatically.
+// Example entry (remove the // to activate):
+// { src: "images/2026-07-isle-of-man/photo1.jpg", event: "Isle of Man", caption: "Start line, Day 1" },
+
+const GALLERY = [
+  // { src: "images/2026-03-jack-frost/photo1.jpg", event: "Jack Frost 2 Day", caption: "Day 1 — Wales" },
+  // { src: "images/2026-05-yorkshire/photo1.jpg",  event: "Yorkshire 2 Day",  caption: "Test 1" },
+];
+
+// ===================== RENDER =====================
+let currentIndex = 0;
+let filteredPhotos = [];
+
+function getEvents() {
+  const seen = new Set();
+  return GALLERY.map(p => p.event).filter(e => { if(seen.has(e)) return false; seen.add(e); return true; });
+}
+
+function buildFilterBar() {
+  const bar = document.getElementById("filterBar");
+  getEvents().forEach(event => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    btn.dataset.filter = event;
+    btn.textContent = event;
+    btn.addEventListener("click", () => applyFilter(event));
+    bar.appendChild(btn);
+  });
+}
+
+function applyFilter(filter) {
+  document.querySelectorAll(".filter-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.filter === filter);
+  });
+  filteredPhotos = filter === "all" ? [...GALLERY] : GALLERY.filter(p => p.event === filter);
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("galleryGrid");
+
+  if (GALLERY.length === 0) {
+    grid.style.columns = "1";
+    grid.innerHTML = `
+      <div class="gallery-empty">
+        <h3>No photos yet</h3>
+        <p>Add photos to the <code>GALLERY</code> array in <code>gallery.html</code> and drop the image files into <code>images/</code>.</p>
+      </div>`;
+    return;
+  }
+  grid.style.columns = "";
+
+  grid.innerHTML = filteredPhotos.map((photo, i) => `
+    <div class="gallery-item" data-index="${i}" role="button" tabindex="0" aria-label="View ${photo.caption || photo.event}">
+      <img src="${photo.src}" alt="${photo.caption || photo.event}" loading="lazy">
+      <div class="overlay">
+        <div class="event-tag">${photo.event}</div>
+        ${photo.caption ? `<div class="caption">${photo.caption}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll(".gallery-item").forEach(el => {
+    el.addEventListener("click", () => openLightbox(parseInt(el.dataset.index)));
+    el.addEventListener("keydown", e => { if(e.key === "Enter") openLightbox(parseInt(el.dataset.index)); });
+  });
+}
+
+// ===================== LIGHTBOX =====================
+function openLightbox(index) {
+  currentIndex = index;
+  showLightboxPhoto();
+  document.getElementById("lightbox").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function showLightboxPhoto() {
+  const photo = filteredPhotos[currentIndex];
+  document.getElementById("lbImg").src = photo.src;
+  document.getElementById("lbImg").alt = photo.caption || photo.event;
+  document.getElementById("lbEvent").textContent = photo.event;
+  document.getElementById("lbCaption").textContent = photo.caption || "";
+  document.getElementById("lbCounter").textContent = `${currentIndex + 1} / ${filteredPhotos.length}`;
+}
+
+function prevPhoto() { currentIndex = (currentIndex - 1 + filteredPhotos.length) % filteredPhotos.length; showLightboxPhoto(); }
+function nextPhoto() { currentIndex = (currentIndex + 1) % filteredPhotos.length; showLightboxPhoto(); }
+
+document.getElementById("lbClose").addEventListener("click", closeLightbox);
+document.getElementById("lbPrev").addEventListener("click", prevPhoto);
+document.getElementById("lbNext").addEventListener("click", nextPhoto);
+document.getElementById("lightbox").addEventListener("click", e => { if(e.target === document.getElementById("lightbox")) closeLightbox(); });
+
+document.addEventListener("keydown", e => {
+  if (!document.getElementById("lightbox").classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+  if (e.key === "ArrowLeft") prevPhoto();
+  if (e.key === "ArrowRight") nextPhoto();
+});
+
+// swipe support for mobile
+let touchStartX = 0;
+document.getElementById("lightbox").addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.getElementById("lightbox").addEventListener("touchend", e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) diff > 0 ? nextPhoto() : prevPhoto();
+});
+
+// ===================== MOBILE NAV =====================
+const navToggle = document.getElementById("navToggle");
+const mobileNav = document.getElementById("mobileNav");
+navToggle.addEventListener("click", () => {
+  const open = mobileNav.classList.toggle("open");
+  navToggle.setAttribute("aria-expanded", open);
+  navToggle.textContent = open ? "✕" : "☰";
+});
+mobileNav.querySelectorAll("a").forEach(a => {
+  a.addEventListener("click", () => {
+    mobileNav.classList.remove("open");
+    navToggle.setAttribute("aria-expanded", false);
+    navToggle.textContent = "☰";
+  });
+});
+
+// ===================== INIT =====================
+filteredPhotos = [...GALLERY];
+buildFilterBar();
+renderGrid();
+</script>
+</body>
+</html>
