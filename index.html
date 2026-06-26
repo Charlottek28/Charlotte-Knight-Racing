@@ -762,17 +762,6 @@
   }
   .icon-btn:hover{color:var(--bone);}
   .field-hint{font-size:11.5px; color:var(--bone-dim); margin-top:5px;}
-  .storage-notice{
-    border:1px solid var(--red);
-    background:rgba(217,51,46,0.1);
-    border-radius:3px;
-    padding:13px 16px;
-    font-size:13px;
-    color:var(--bone);
-    margin-bottom:22px;
-    line-height:1.5;
-  }
-
   /* race detail modal */
   .detail-modal{max-width:680px;}
   .detail-modal .photo-full{
@@ -921,9 +910,6 @@
       </div>
       <div class="section-tail">Every round, logged after the gate drops — results, conditions, and the story behind each finish.</div>
     </div>
-    <div style="margin-bottom:28px;">
-      <button class="btn btn-primary" id="openAddRace">+ Add race report</button>
-    </div>
     <div id="featuredSlot"></div>
     <div class="race-grid" id="raceGrid"></div>
   </div>
@@ -994,79 +980,6 @@
     </div>
   </div>
 </footer>
-
-<!-- ============ ADD RACE MODAL ============ -->
-<div class="modal-overlay" id="addRaceOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <div>
-        <h3>Add race report</h3>
-        <p class="modal-sub">Log this race day — it'll appear in the archive and update your stats.</p>
-      </div>
-      <button class="icon-btn" id="closeAddRace" aria-label="Close">×</button>
-    </div>
-    <div id="storageNotice"></div>
-    <form id="raceForm">
-      <div class="field">
-        <label for="f-type">Post type</label>
-        <select id="f-type">
-          <option value="race">Race report</option>
-          <option value="journal">Journal post (no result)</option>
-        </select>
-      </div>
-      <div class="field-row">
-        <div class="field">
-          <label for="f-event">Title</label>
-          <input type="text" id="f-event" placeholder="e.g. Hawkstone Park Enduro" required>
-        </div>
-        <div class="field">
-          <label for="f-date">Date</label>
-          <input type="date" id="f-date" required>
-        </div>
-      </div>
-      <div class="field-row">
-        <div class="field" id="resultField">
-          <label for="f-result">Result</label>
-          <input type="text" id="f-result" placeholder="e.g. 3rd — Women's expert">
-        </div>
-        <div class="field">
-          <label for="f-location">Location</label>
-          <input type="text" id="f-location" placeholder="e.g. Shropshire, UK">
-        </div>
-      </div>
-      <div class="field">
-        <label for="f-image">Photo URL</label>
-        <input type="text" id="f-image" placeholder="https://i.imgur.com/your-photo.jpg">
-        <div class="field-hint">Upload your race photo to Imgur (or similar) and paste the direct image link here.</div>
-      </div>
-      <div class="field">
-        <label for="f-video">Video URL (optional)</label>
-        <input type="text" id="f-video" placeholder="https://youtube.com/watch?v=...">
-      </div>
-      <div class="field">
-        <label for="f-tags">Tags (comma separated)</label>
-        <input type="text" id="f-tags" placeholder="e.g. mud, podium, round 4">
-      </div>
-      <div class="field">
-        <label for="f-donate">Donate / fundraiser URL (optional)</label>
-        <input type="text" id="f-donate" placeholder="https://www.gofundme.com/f/...">
-        <div class="field-hint">Only needed for fundraiser posts — adds a donate button to the post.</div>
-      </div>
-      <div class="field" style="display:flex; align-items:center; gap:10px; flex-direction:row;">
-        <input type="checkbox" id="f-featured" style="width:auto;">
-        <label for="f-featured" style="margin:0; text-transform:none; letter-spacing:0; font-size:14px; color:var(--bone);">Feature this story at the top of the archive</label>
-      </div>
-      <div class="field">
-        <label for="f-report">Race report</label>
-        <textarea id="f-report" placeholder="How did the day go? Conditions, key moments, takeaways..." required></textarea>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn" id="cancelAddRace">Cancel</button>
-        <button type="submit" class="btn btn-primary">Save race report</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <!-- ============ RACE DETAIL MODAL ============ -->
 <div class="modal-overlay" id="detailOverlay">
@@ -1496,69 +1409,6 @@ document.getElementById("detailOverlay").addEventListener("click", (e) => {
   }
 });
 
-// ===================== ADD RACE MODAL =====================
-const addRaceOverlay = document.getElementById("addRaceOverlay");
-document.getElementById("openAddRace").addEventListener("click", () => {
-  addRaceOverlay.classList.add("open");
-  const notice = document.getElementById("storageNotice");
-  if (!STORAGE_AVAILABLE) {
-    notice.innerHTML = `<div class="storage-notice">This site is hosted as a static page, so this form can't save new entries here. Send Charlotte the race details and photo, and she'll add it to the page directly.</div>`;
-  } else {
-    notice.innerHTML = "";
-  }
-});
-document.getElementById("closeAddRace").addEventListener("click", () => addRaceOverlay.classList.remove("open"));
-document.getElementById("cancelAddRace").addEventListener("click", () => addRaceOverlay.classList.remove("open"));
-addRaceOverlay.addEventListener("click", (e) => {
-  if (e.target === addRaceOverlay) addRaceOverlay.classList.remove("open");
-});
-
-document.getElementById("f-type").addEventListener("change", (e) => {
-  const isJournal = e.target.value === "journal";
-  document.getElementById("resultField").style.display = isJournal ? "none" : "block";
-});
-
-document.getElementById("raceForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const submitBtn = e.target.querySelector("button[type=submit]");
-  submitBtn.textContent = "Saving…";
-  submitBtn.disabled = true;
-
-  const type = document.getElementById("f-type").value;
-  const newRace = {
-    id: "race-" + Date.now(),
-    type: type,
-    event: document.getElementById("f-event").value.trim(),
-    date: document.getElementById("f-date").value,
-    result: type === "journal" ? "Journal" : document.getElementById("f-result").value.trim(),
-    location: document.getElementById("f-location").value.trim(),
-    image: document.getElementById("f-image").value.trim(),
-    video: document.getElementById("f-video").value.trim(),
-    tags: document.getElementById("f-tags").value.split(",").map(t => t.trim()).filter(Boolean),
-    donateUrl: document.getElementById("f-donate").value.trim(),
-    featured: document.getElementById("f-featured").checked,
-    report: document.getElementById("f-report").value.trim(),
-  };
-
-  const custom = await getCustomRaces();
-  custom.push(newRace);
-  const success = await saveRaces(custom);
-
-  if (success) {
-    ALL_RACES.push(newRace);
-    renderRaceGrid();
-    renderFeatured();
-    updateHeroStats();
-    renderPitchStats(ALL_RACES.filter(r => r.type !== "journal").length);
-    e.target.reset();
-    document.getElementById("resultField").style.display = "block";
-    addRaceOverlay.classList.remove("open");
-  } else {
-    alert("Could not save the race report. Please try again.");
-  }
-  submitBtn.textContent = "Save race report";
-  submitBtn.disabled = false;
-});
 
 // ===================== SPONSOR PACK MODAL =====================
 const sponsorPackOverlay = document.getElementById("sponsorPackOverlay");
