@@ -409,38 +409,66 @@
 </div>
 
 <script>
-// ===================== GALLERY DATA =====================
-// Add new photos here. Each entry needs:
-//   src      — relative path, e.g. "images/2026-07-isle-of-man/photo1.jpg"
-//   event    — shown as a label above the caption (matches your event slugs)
-//   caption  — optional short description
-//
-// Photos are grouped by event in the filter bar automatically.
-// Example entry (remove the // to activate):
-// { src: "images/2026-07-isle-of-man/photo1.jpg", event: "Isle of Man", caption: "Start line, Day 1" },
+const REPO = "Charlottek28/Charlotte-Knight-Racing";
+const API  = `https://api.github.com/repos/${REPO}/contents/images`;
 
-const GALLERY = [
-  // { src: "images/2026-03-jack-frost/photo1.jpg", event: "Jack Frost 2 Day", caption: "Day 1 — Wales" },
-  // { src: "images/2026-05-yorkshire/photo1.jpg",  event: "Yorkshire 2 Day",  caption: "Test 1" },
-];
-
-// ===================== RENDER =====================
-let currentIndex = 0;
+let allPhotos = [];
 let filteredPhotos = [];
+let currentIndex = 0;
 
-function getEvents() {
-  const seen = new Set();
-  return GALLERY.map(p => p.event).filter(e => { if(seen.has(e)) return false; seen.add(e); return true; });
+// Fetch all folders inside images/, then fetch photos inside each
+async function loadPhotos() {
+  showLoading(true);
+  try {
+    const res = await fetch(API);
+    if (!res.ok) throw new Error(res.status);
+    const entries = await res.json();
+    const folders = entries.filter(e => e.type === "dir");
+
+    const results = await Promise.all(folders.map(async folder => {
+      const r = await fetch(folder.url);
+      const files = await r.json();
+      return files
+        .filter(f => /\.(jpe?g|png|webp|gif)$/i.test(f.name))
+        .map(f => ({
+          src: `images/${folder.name}/${f.name}`,
+          event: folder.name.replace(/_/g, " "),
+          caption: ""
+        }));
+    }));
+
+    allPhotos = results.flat();
+  } catch(e) {
+    allPhotos = [];
+  }
+  showLoading(false);
+  buildFilterBar();
+  filteredPhotos = [...allPhotos];
+  renderGrid();
 }
 
+function showLoading(on) {
+  const grid = document.getElementById("galleryGrid");
+  if (on) {
+    grid.style.columns = "1";
+    grid.innerHTML = `<div class="gallery-empty"><h3>Loading photos…</h3></div>`;
+  }
+}
+
+// ===================== RENDER =====================
 function buildFilterBar() {
   const bar = document.getElementById("filterBar");
-  getEvents().forEach(event => {
+  // remove any previously added buttons (keep "All")
+  bar.querySelectorAll("[data-filter]:not([data-filter='all'])").forEach(b => b.remove());
+  const seen = new Set();
+  allPhotos.forEach(p => {
+    if (seen.has(p.event)) return;
+    seen.add(p.event);
     const btn = document.createElement("button");
     btn.className = "filter-btn";
-    btn.dataset.filter = event;
-    btn.textContent = event;
-    btn.addEventListener("click", () => applyFilter(event));
+    btn.dataset.filter = p.event;
+    btn.textContent = p.event;
+    btn.addEventListener("click", () => applyFilter(p.event));
     bar.appendChild(btn);
   });
 }
@@ -449,30 +477,29 @@ function applyFilter(filter) {
   document.querySelectorAll(".filter-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.filter === filter);
   });
-  filteredPhotos = filter === "all" ? [...GALLERY] : GALLERY.filter(p => p.event === filter);
+  filteredPhotos = filter === "all" ? [...allPhotos] : allPhotos.filter(p => p.event === filter);
   renderGrid();
 }
 
 function renderGrid() {
   const grid = document.getElementById("galleryGrid");
 
-  if (GALLERY.length === 0) {
+  if (allPhotos.length === 0) {
     grid.style.columns = "1";
     grid.innerHTML = `
       <div class="gallery-empty">
         <h3>No photos yet</h3>
-        <p>Add photos to the <code>GALLERY</code> array in <code>gallery.html</code> and drop the image files into <code>images/</code>.</p>
+        <p>Upload photo folders into the <code>images/</code> folder on GitHub — they'll appear here automatically.</p>
       </div>`;
     return;
   }
   grid.style.columns = "";
 
   grid.innerHTML = filteredPhotos.map((photo, i) => `
-    <div class="gallery-item" data-index="${i}" role="button" tabindex="0" aria-label="View ${photo.caption || photo.event}">
-      <img src="${photo.src}" alt="${photo.caption || photo.event}" loading="lazy">
+    <div class="gallery-item" data-index="${i}" role="button" tabindex="0" aria-label="${photo.event}">
+      <img src="${photo.src}" alt="${photo.event}" loading="lazy">
       <div class="overlay">
         <div class="event-tag">${photo.event}</div>
-        ${photo.caption ? `<div class="caption">${photo.caption}</div>` : ''}
       </div>
     </div>
   `).join('');
@@ -545,9 +572,7 @@ mobileNav.querySelectorAll("a").forEach(a => {
 });
 
 // ===================== INIT =====================
-filteredPhotos = [...GALLERY];
-buildFilterBar();
-renderGrid();
+loadPhotos();
 </script>
 </body>
 </html>
