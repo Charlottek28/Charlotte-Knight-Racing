@@ -821,12 +821,14 @@
 
   /* ---------- small phones (iPhone SE, 390px iPhones) ---------- */
   @media (max-width: 480px){
-    .wrap{padding:0 16px;}
+    .wrap{padding:0 24px;}
     .modal{padding:24px 18px;}
     .modal-overlay{padding:16px 12px; padding-bottom:calc(16px + env(safe-area-inset-bottom)); align-items:flex-end;}
     .modal{border-radius:12px 12px 0 0; max-height:92dvh; overflow-y:auto; -webkit-overflow-scrolling:touch;}
     .section-tail{display:none;}
     .hero-content{padding:72px 0 36px; min-height:360px;}
+    .hero h1{font-size:clamp(36px,11vw,56px);}
+    .hero-sub{font-size:15px;}
     .hero-stats{gap:22px; margin-top:28px;}
     .stat .num{font-size:28px;}
     .contact-card{padding:28px 16px;}
