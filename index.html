@@ -999,6 +999,7 @@
       <span id="detailResult" class="mono"></span>
     </div>
     <p class="report-text" id="detailReport"></p>
+    <div id="detailGalleryLink"></div>
     <div id="detailDonateSlot"></div>
     <div class="tags" id="detailTags" style="margin-top:18px;"></div>
   </div>
@@ -1118,6 +1119,7 @@ const SEED_RACES = [
     date: "2026-04-25",
     result: "Practice day",
     location: "UK",
+    galleryFolder: "APEX_MOTOGIRLS_1",
     image: "images/APEX_MOTOGIRLS_1/NZ9_3043.jpg",
     gallery: [
       "images/APEX_MOTOGIRLS_1/1.jpg",
@@ -1161,6 +1163,7 @@ const SEED_RACES = [
     date: "2026-06-13",
     result: "Practice weekend",
     location: "UK",
+    galleryFolder: "APEX_MOTOGIRLS_2",
     image: "images/APEX_MOTOGIRLS_2/NZ9_1738.jpg",
     gallery: [
       "images/APEX_MOTOGIRLS_2/NZ9_1756.jpg",
@@ -1241,6 +1244,7 @@ const SEED_RACES = [
     date: "2026-05-27",
     result: "3rd in class",
     location: "UK",
+    galleryFolder: "YORKSHIRE_SPRINT",
     image: "images/YORKSHIRE_SPRINT/9B6A6325-(ZF-8634-86607-1-001).jpg",
     gallery: [
       "images/YORKSHIRE_SPRINT/9B6A6726-(ZF-8634-86607-1-002).jpg",
@@ -1261,6 +1265,7 @@ const SEED_RACES = [
     date: "2026-05-30",
     result: "Finished — both days",
     location: "Helmsley, Yorkshire, UK",
+    galleryFolder: "YORKSHIRE_BEC",
     image: "images/YORKSHIRE_BEC/3I9A9638.JPG",
     gallery: [
       "images/YORKSHIRE_BEC/3I9A8848.JPG",
@@ -1519,6 +1524,12 @@ function openDetail(race) {
     donateSlot.innerHTML = "";
   }
   document.getElementById("detailTags").innerHTML = (race.tags || []).map(t => `<span class="tag-chip">${escapeHtml(t)}</span>`).join("");
+  const galleryLink = document.getElementById("detailGalleryLink");
+  if (race.galleryFolder) {
+    galleryLink.innerHTML = `<a class="btn btn-secondary" href="gallery.html?event=${encodeURIComponent(race.galleryFolder)}" style="margin:18px 0 4px; display:inline-flex;">View all photos in gallery →</a>`;
+  } else {
+    galleryLink.innerHTML = "";
+  }
   document.getElementById("detailOverlay").classList.add("open");
 }
 

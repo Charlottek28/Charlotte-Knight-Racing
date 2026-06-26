@@ -443,7 +443,17 @@ async function loadPhotos() {
   }
   showLoading(false);
   buildFilterBar();
-  filteredPhotos = [...allPhotos];
+  const urlEvent = new URLSearchParams(window.location.search).get("event");
+  if (urlEvent) {
+    const label = urlEvent.replace(/_/g, " ");
+    filteredPhotos = allPhotos.filter(p => p.event === label);
+    const bar = document.getElementById("filterBar");
+    bar.querySelectorAll(".filter-btn").forEach(b => {
+      b.classList.toggle("active", b.dataset.filter === label);
+    });
+  } else {
+    filteredPhotos = [...allPhotos];
+  }
   renderGrid();
 }
 
