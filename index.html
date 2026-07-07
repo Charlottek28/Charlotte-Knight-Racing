@@ -867,9 +867,9 @@
     <h1>CHARLOTTE<br>KNIGHT <span class="num">#45</span></h1>
     <p class="hero-sub">Race-day reports, results, and content from every round — built to keep sponsors, teams, and followers close to the dirt.</p>
     <div class="hero-stats" id="heroStats">
-      <div class="stat"><div class="num mono" id="statRaces">0</div><div class="label">Races logged</div></div>
-      <div class="stat"><div class="num mono" id="statSponsors">0</div><div class="label">Sponsors</div></div>
+      <div class="stat"><div class="num mono">3/6</div><div class="label">BEC rounds</div></div>
       <div class="stat"><div class="num mono">#45</div><div class="label">Race number</div></div>
+      <div class="stat"><div class="num mono">ISDE</div><div class="label">Portugal, October</div></div>
     </div>
   </div>
 </section>
@@ -1538,11 +1538,7 @@ function renderRaceGrid() {
   });
 }
 
-function updateHeroStats() {
-  const raceCount = ALL_RACES.filter(r => r.type !== "journal").length;
-  document.getElementById("statRaces").textContent = raceCount;
-  document.getElementById("statSponsors").textContent = SPONSORS.length;
-}
+function updateHeroStats() {}
 
 // ===================== DETAIL MODAL =====================
 function openDetail(race) {
