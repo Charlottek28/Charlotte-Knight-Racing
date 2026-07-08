@@ -869,7 +869,7 @@
     <div class="hero-stats" id="heroStats">
       <div class="stat"><div class="num mono">3/6</div><div class="label">BEC rounds</div></div>
       <div class="stat"><div class="num mono">#45</div><div class="label">Race number</div></div>
-      <div class="stat"><div class="num mono">ISDE</div><div class="label">Portugal, October</div></div>
+      <div class="stat"><div class="num mono" id="isdeCountdownNum">ISDE</div><div class="label" id="isdeCountdownLabel">Portugal, October</div></div>
     </div>
   </div>
 </section>
@@ -1564,7 +1564,31 @@ function renderRaceGrid() {
   });
 }
 
-function updateHeroStats() {}
+function updateHeroStats() {
+  const isde = EVENTS.find(ev => ev.series === "isde");
+  if (!isde) return;
+
+  const numEl = document.getElementById("isdeCountdownNum");
+  const labelEl = document.getElementById("isdeCountdownLabel");
+  if (!numEl || !labelEl) return;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(isde.date + "T00:00:00");
+  const end = new Date((isde.endDate || isde.date) + "T23:59:59");
+  const daysToGo = Math.ceil((start - today) / 86400000);
+
+  if (today > end) {
+    numEl.textContent = "ISDE";
+    labelEl.textContent = "Portugal, October";
+  } else if (daysToGo <= 0) {
+    numEl.textContent = "ISDE";
+    labelEl.textContent = "Underway now";
+  } else {
+    numEl.textContent = String(daysToGo);
+    labelEl.textContent = (daysToGo === 1 ? "Day to ISDE" : "Days to ISDE");
+  }
+}
 
 // ===================== DETAIL MODAL =====================
 function openDetail(race) {
