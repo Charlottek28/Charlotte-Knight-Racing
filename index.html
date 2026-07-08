@@ -152,6 +152,20 @@
     color:var(--bone-dim);
   }
   nav.links a:hover{color:var(--lime);}
+  .nav-donate{
+    background:var(--lime);
+    color:var(--ink) !important;
+    padding:7px 14px;
+    border-radius:3px;
+    font-weight:600;
+  }
+  .nav-donate:hover{background:var(--bone); color:var(--ink) !important;}
+  .mobile-nav a.nav-donate{
+    color:var(--ink) !important;
+    text-align:center;
+    margin-top:8px;
+    border-bottom:none;
+  }
   .nav-toggle{
     display:none;
     background:none;
@@ -845,6 +859,7 @@
       <a href="#about">About</a>
       <a href="gallery.html">Gallery</a>
       <a href="#contact">Contact</a>
+      <a class="nav-donate" href="https://www.gofundme.com/f/help-charlotte-compete-for-team-new-zealand-at-world-6-days" target="_blank" rel="noopener">Donate</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
   </div>
@@ -855,6 +870,7 @@
     <a href="#about" class="mobile-nav-link">About</a>
     <a href="gallery.html" class="mobile-nav-link">Gallery</a>
     <a href="#contact" class="mobile-nav-link">Contact</a>
+    <a href="https://www.gofundme.com/f/help-charlotte-compete-for-team-new-zealand-at-world-6-days" target="_blank" rel="noopener" class="mobile-nav-link nav-donate">Donate to the ISDE campaign</a>
   </nav>
 </header>
 
@@ -871,6 +887,7 @@
       <div class="stat"><div class="num mono">#45</div><div class="label">Race number</div></div>
       <div class="stat"><div class="num mono" id="isdeCountdownNum">ISDE</div><div class="label" id="isdeCountdownLabel">Portugal, October</div></div>
     </div>
+    <a class="btn btn-primary" href="https://www.gofundme.com/f/help-charlotte-compete-for-team-new-zealand-at-world-6-days" target="_blank" rel="noopener" style="margin-top:28px; align-self:flex-start;">Support my journey to the 100th ISDE</a>
   </div>
 </section>
 
