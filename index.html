@@ -1031,21 +1031,25 @@
     </div>
     <p class="modal-sub" style="margin-bottom:20px;">Enter your details and a media pack with race stats, photos, and reach will be sent over.</p>
     <form id="sponsorForm">
+      <input type="hidden" name="access_key" value="22162199-a665-4d45-bab1-b2600199f4fe">
+      <input type="hidden" name="subject" value="New sponsor pack request">
+      <input type="hidden" name="from_name" value="Charlotte Knight Racing website">
       <div class="field">
         <label for="s-name">Name</label>
-        <input type="text" id="s-name" required>
+        <input type="text" id="s-name" name="name" required>
       </div>
       <div class="field">
         <label for="s-company">Company</label>
-        <input type="text" id="s-company">
+        <input type="text" id="s-company" name="company">
       </div>
       <div class="field">
         <label for="s-email">Email</label>
-        <input type="email" id="s-email" required>
+        <input type="email" id="s-email" name="email" required>
       </div>
+      <p class="modal-sub" id="sponsorFormError" style="display:none; color:#ff6b6b; margin:4px 0 0;">Something went wrong sending your request — please try again or email directly.</p>
       <div class="modal-actions">
         <button type="button" class="btn" id="cancelSponsorPack">Cancel</button>
-        <button type="submit" class="btn btn-purple">Send request</button>
+        <button type="submit" class="btn btn-purple" id="sponsorFormSubmit">Send request</button>
       </div>
     </form>
   </div>
@@ -1771,12 +1775,32 @@ document.getElementById("cancelSponsorPack").addEventListener("click", () => spo
 sponsorPackOverlay.addEventListener("click", (e) => {
   if (e.target === sponsorPackOverlay) sponsorPackOverlay.classList.remove("open");
 });
-document.getElementById("sponsorForm").addEventListener("submit", (e) => {
+document.getElementById("sponsorForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+  const form = e.target;
   const name = document.getElementById("s-name").value.trim();
-  sponsorPackOverlay.classList.remove("open");
-  e.target.reset();
-  alert(`Thanks${name ? ", " + name : ""} — your sponsor pack request has been noted.`);
+  const errorEl = document.getElementById("sponsorFormError");
+  const submitBtn = document.getElementById("sponsorFormSubmit");
+  errorEl.style.display = "none";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(form))),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || "Request failed");
+    sponsorPackOverlay.classList.remove("open");
+    form.reset();
+    alert(`Thanks${name ? ", " + name : ""} — your sponsor pack request has been sent.`);
+  } catch (err) {
+    errorEl.style.display = "block";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Send request";
+  }
 });
 
 // ===================== MOBILE NAV =====================
