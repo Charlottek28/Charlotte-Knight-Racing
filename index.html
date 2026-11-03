@@ -337,6 +337,7 @@
     color:var(--bone);
     border-radius:3px;
   }
+  .about-body h2{font-size:clamp(26px,4vw,38px); margin-bottom:20px;}
   .about-body p{color:var(--bone-dim); margin:0 0 16px;}
   .about-body p:first-of-type{
     color:var(--bone);
@@ -839,7 +840,6 @@
       <span class="name">CHARLOTTE KNIGHT</span>
     </div>
     <nav class="links">
-      <a href="#upcoming">Upcoming</a>
       <a href="#races">Race reports</a>
       <a href="#sponsors">Sponsors</a>
       <a href="#about">About</a>
@@ -849,7 +849,6 @@
     <button class="nav-toggle" id="navToggle" aria-label="Open menu">☰</button>
   </div>
   <nav class="mobile-nav" id="mobileNav">
-    <a href="#upcoming" class="mobile-nav-link">Upcoming</a>
     <a href="#races" class="mobile-nav-link">Race reports</a>
     <a href="#sponsors" class="mobile-nav-link">Sponsors</a>
     <a href="#about" class="mobile-nav-link">About</a>
@@ -888,6 +887,9 @@
 <div class="trail-line"></div>
 
 <!-- ============ UPCOMING EVENTS ============ -->
+<!-- Hidden for now — 2026 season is over. Re-enable and refresh EVENTS with
+     the 2027 calendar when it's announced; renderEventList() still works,
+     it's just not called from init() while this is commented out.
 <section id="upcoming">
   <div class="wrap">
     <div class="section-head">
@@ -900,6 +902,7 @@
     <div class="event-list" id="eventList"></div>
   </div>
 </section>
+-->
 
 <div class="trail-line"></div>
 
@@ -927,9 +930,13 @@
       <div class="plate-badge mono">45</div>
     </div>
     <div class="about-body">
-      <p>I'm Charlotte — a Kiwi now based in the UK. By day, I'm a Design Engineer at Triumph Motorcycles, working on mechatronic suspension systems. By the weekend, I'm either deep into one of my own projects, riding my bike, or off on some kind of adventure.</p>
-      <p>Racing hasn't been a straight line for me. In 2019, I stepped away from riding to focus fully on building my engineering career — at the time, I didn't know if I'd ever come back to racing. But the passion never really left, and coming back has been all about rebuilding confidence, fitness, racecraft, and the belief in myself.</p>
-      <p>2026 isn't just about results. It's about progression, consistency, becoming stronger mentally and physically, and seeing how far I can really go — racing under #45 on a Triumph, backed by a kit list built to hold up to a full season.</p>
+      <h2>About Charlotte Knight</h2>
+      <p>I'm Charlotte Knight, a New Zealand-born enduro rider currently based in the UK, balancing a career in engineering with a passion for racing motorcycles.</p>
+      <p>My journey has taken me from motocross and cross-country racing in New Zealand, to studying Mechatronics Engineering, moving halfway around the world and building a career with Triumph Motorcycles. Along the way, I've found my way back to racing, taking on the British Enduro Championship and working towards one of my biggest goals: representing New Zealand at the International Six Days Enduro (ISDE).</p>
+      <p>In 2026, I had the opportunity to achieve that goal, competing in Portugal as part of the New Zealand Women's Trophy Team and helping secure the country's best-ever result in the category.</p>
+      <p>I'm passionate about pushing myself, taking on new challenges and seeing just how far I can go. Whether that's developing new technology through engineering or lining up at the start of an enduro race, I love learning, improving and stepping outside my comfort zone.</p>
+      <p>Through this journey, I hope to inspire others, particularly young women and those chasing their own ambitions, to give things a go, back themselves and not be afraid to take a different path.</p>
+      <p>Chase those dreams.</p>
     </div>
   </div>
 </section>
@@ -1256,7 +1263,6 @@ const SEED_RACES = [
   {
     id: "seed-8",
     type: "journal",
-    featured: true,
     event: "Selected to represent New Zealand at ISDE",
     date: "2026-05-13",
     result: "Team NZ — 100th ISDE, Portugal",
@@ -1551,11 +1557,13 @@ const SEED_RACES = [
   {
     id: "seed-isde-2026",
     type: "race",
+    featured: true,
     event: "100th International Six Days Enduro — Team New Zealand",
     date: "2026-10-12",
     result: "4th — World Women's Trophy Team (New Zealand)",
     location: "Grândola, Portugal",
     galleryFolder: "isde-2026",
+    image: "images/team-nz-isde-card.jpg",
     video: "",
     tags: ["ISDE", "Team NZ", "World Trophy"],
     report: "Whakatāne-raised motorcycle racer Charlotte Knight has helped New Zealand achieve its best-ever result at the 100th International Six Days Enduro (ISDE), finishing fourth against some of the world's best riders in Portugal — just nine months after returning to racing.\n\nNow based in the UK, where she works as a Senior Electrical Components Engineer for Triumph Motorcycles, Charlotte earned her place on the New Zealand Women's Trophy Team after returning to the sport following a seven-year break.\n\nHeld in Grândola, Portugal, from 12–17 October, the 100th edition of the ISDE brought together more than 500 riders from over 30 nations. Often described as the Olympics of enduro, the event tests riders' speed, endurance and mechanical skills across six demanding days.\n\nCharlotte competed alongside teammates Rachael Archer, a three-time GNCC champion, and 16-year-old Bailey Newbould. The team finished fourth in the Women's World Trophy, achieving New Zealand's best-ever result in the category, behind the United States, Australia and France.\n\nFor Charlotte, lining up alongside some of the world's top professional riders was an opportunity to learn as much as it was to compete.\n\nGrowing up in New Zealand, Charlotte raced motocross and cross-country before stepping away from competition in 2018 to focus on completing her Mechatronics Engineering degree and building her career. After moving to the UK and establishing herself at Triumph, she eventually found her way back to enduro racing.\n\n\"I never really thought I'd get to say I was an ISDE finisher, let alone represent New Zealand on the world stage.\"\n\nGetting to Portugal took months of preparation, training, fundraising and organising the logistics of competing overseas. Before racing, riders had to walk the special tests on foot, studying the terrain and working out how best to approach each section.\n\nCharlotte rode her own Triumph TF 250-E, brought over from the UK — the same bike she had raced throughout the year. But getting through six days was about much more than riding quickly.\n\n\"The biggest challenge for me wasn't necessarily the riding itself. It was the long days, the unknowns and everything that went into getting yourself and your bike to the finish each day.\n\n\"Even at 3am, I'd be awake mentally walking myself through the morning service — how much oil I needed, which tools I needed and what jobs had to be done in what order.\n\n\"When you're doing something for the first time, you don't always know what you don't know. I had to trust my preparation, take things one step at a time and learn as I went.\"\n\nThe event was a real test of both rider and machine, with temperatures reaching 32°C and relentless dust taking its toll on bikes throughout the week. The long days on the trail saw conditions become increasingly rough, putting constant demands on the bikes, with many competitors experiencing mechanical problems or being forced to retire.\n\nTime to work on the bikes was extremely limited, with just 10 minutes in the morning and 15 minutes at the end of each day. Riders were responsible for carrying out their own mechanical work, with service crews only permitted to assist with fluids under the event rules. That meant carefully prioritising servicing and setup adjustments to give the bike the best chance of making it to the finish line each day.\n\nCharlotte managed her own bike preparation throughout the event, changing three tyres over the six days alongside carrying out regular servicing and checks. With so little time available, knowing what needed attention most — and making sure the bike was ready for another long day on the trail — was just as important as the riding itself.\n\nThe event concluded with a beach motocross at Sines, providing a final challenge in unfamiliar sand conditions. After six demanding days of racing, Charlotte crossed the finish line to officially become an ISDE finisher — an achievement she had never imagined possible when she first returned to the sport just nine months earlier.\n\nLooking ahead, Charlotte hopes to build on the experience by finding more speed through the special tests and gaining the confidence to push her limits further.\n\n\"I know there's still more speed in me, and I want to get more comfortable pushing my limits. My main goal this time was to get to the finish, but having completed my first ISDE, I've got a much better idea of what to expect and where I can improve.\n\n\"To represent New Zealand alongside two great teammates and come away with our best-ever result is something I'm really proud of.\"\n\nFor Charlotte, the achievement also carries a message for young people back home, particularly girls who might be interested in motorsport or engineering but are unsure where those interests could take them.\n\n\"Coming back to racing after seven years away, I never imagined it would lead to representing New Zealand at the ISDE. There were plenty of unknowns along the way, but I'm glad I took the leap and gave it a go.\n\n\"I'd encourage anyone with a dream or something they're passionate about to back themselves and chase those dreams. You don't have to know exactly where it's going to lead — sometimes you just have to take that first step, give it a go and see what happens. You never know what's around the corner.\n\n\"I can officially call myself an ISDE six-days finisher. I never thought I'd get to say that, and I'm incredibly proud that I can.\"",
@@ -1880,7 +1888,7 @@ async function init() {
 
   renderSponsorPills();
   renderSponsorLogoGrid();
-  renderEventList();
+  // renderEventList(); // re-enable when the "Upcoming events" section comes back for 2027
 
   ALL_RACES = await loadRaces();
   renderFeatured();
