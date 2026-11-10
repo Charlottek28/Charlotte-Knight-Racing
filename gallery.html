@@ -445,11 +445,11 @@ async function loadPhotos() {
   buildFilterBar();
   const urlEvent = new URLSearchParams(window.location.search).get("event");
   if (urlEvent) {
-    const label = urlEvent.replace(/_/g, " ");
-    filteredPhotos = allPhotos.filter(p => p.event === label);
+    const labels = urlEvent.split(",").map(e => e.replace(/_/g, " "));
+    filteredPhotos = allPhotos.filter(p => labels.includes(p.event));
     const bar = document.getElementById("filterBar");
     bar.querySelectorAll(".filter-btn").forEach(b => {
-      b.classList.toggle("active", b.dataset.filter === label);
+      b.classList.toggle("active", labels.includes(b.dataset.filter));
     });
   } else {
     filteredPhotos = [...allPhotos];
